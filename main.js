@@ -1,10 +1,10 @@
 class calclulating{
-    static digit = 2;
-    static ms = [1, 100**this.digit];
+    static digit = 0;
+    static ms = [0,0];
     static vs = [0,-1];
-    static positions = [100,500];
     static name = "block";
     static window_Size = [window.innerWidth, window.innerHeight];
+    static positions = [Math.floor(this.window_Size[0]/3),Math.floor(this.window_Size[0]/3*2)];
     static size = [];
     static y = 0;
     static size_Of_Block = [];
@@ -20,7 +20,7 @@ class calclulating{
         this.size_Of_Block = [];
         let max_Size = [100,150];
         let ms = this.ms;
-        this.size_Of_Block = [[100,100], [100,100]];
+        this.size_Of_Block = [[50,50], [50,50]];
         console.log(this.size_Of_Block);
         for (let i = 0; i < 2; i++){
             document.getElementById(`${this.name}${i}`).style.width = `${Math.floor(this.size_Of_Block[i][0])}px`;
@@ -46,6 +46,7 @@ class calclulating{
         for (let i = 0; i < 2; i++){
             document.getElementById("body").innerHTML += `<div class = "block" id = "${this.name}${i}"></div>`;
         }
+        this.ms = [1, 100**this.digit];
     }
     static control_Crashing(){
         if (this.positions[0]+this.size_Of_Block[0][0] - this.positions[1] > 0 && this.split){
@@ -68,11 +69,16 @@ class calclulating{
     }
 }
 
-function main(){
+function main(digit){
     c = calclulating;
+    c.digit = digit;
+    c.positions = [Math.floor(c.window_Size[0]/3),Math.floor(c.window_Size[0]/3*2)];;
     c.add_Size_To_Window();
     c.generate_Blocks();
     c.add_Size_To_Blocks();
+    c.vs = [0,-1];
+    c.pi = 0;
+    c.split = c.vs[0] >= 0 ? true : false;
     console.log(c.size_Of_Block);
     interval = setInterval(function() {
         if (c.vs[0] > 0 && c.vs[1] > 0 && c.vs[0] < c.vs[1]){
@@ -81,8 +87,7 @@ function main(){
         for (let i = 0; i < c.positions.length; i++){
             c.positions[i] += c.vs[i];
             if (i == 1 && c.positions[1]-c.position_Of_Box[0] > c.size_Of_Block[0][0]){
-                console.log(c.positions[i], c.size_Of_Block[0][0])
-            c.add_Position(`${c.name}${i}`, c.positions[i], c.y);
+                c.add_Position(`${c.name}${i}`, c.positions[i], c.y);
             }
             else if(i == 0){
                 c.add_Position(`${c.name}${i}`, c.positions[i], c.y);
@@ -94,4 +99,10 @@ function main(){
     },1);
     //clearInterval(interval);
 }
-main();
+
+function start(){
+    digit = document.getElementById("digit").value;
+    digit = digit ? digit : 2;
+    document.getElementById("body").innerHTML = "";
+    main(digit)
+}
