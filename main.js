@@ -21,7 +21,6 @@ class calclulating{
         this.size_Of_Block = [];
         let ms = this.ms;
         this.size_Of_Block = [[50,50], [50,50]];
-        console.log(this.size_Of_Block);
         for (let i = 0; i < 2; i++){
             document.getElementById(`${this.name}${i}`).style.width = `${Math.floor(this.size_Of_Block[i][0])}px`;
             document.getElementById(`${this.name}${i}`).style.height = `${Math.floor(this.size_Of_Block[i][1])}px`;
