@@ -1,3 +1,4 @@
+var started = false;
 class calclulating{
     static digit = 0;
     static ms = [0,0];
@@ -18,7 +19,6 @@ class calclulating{
 
     static add_Size_To_Blocks(){
         this.size_Of_Block = [];
-        let max_Size = [100,150];
         let ms = this.ms;
         this.size_Of_Block = [[50,50], [50,50]];
         console.log(this.size_Of_Block);
@@ -52,6 +52,7 @@ class calclulating{
         if (this.positions[0]+this.size_Of_Block[0][0] - this.positions[1] > 0 && this.split){
             let u1 = this.vs[0];
             let u2 = this.vs[1];
+            console.log(u1, u2)
             this.vs[0] = (this.ms[0]-this.ms[1])/(this.ms[0]+this.ms[1])*u1 + (2*this.ms[1])/(this.ms[0] + this.ms[1])*u2; 
             this.vs[1] = (2*this.ms[0])/(this.ms[0] + this.ms[1])*u1 + (this.ms[1]- this.ms[0])/(this.ms[1] + this.ms[0])*u2;
             this.split = false;
@@ -76,17 +77,23 @@ function main(digit){
     c.add_Size_To_Window();
     c.generate_Blocks();
     c.add_Size_To_Blocks();
-    c.vs = [0,-1];
+    c.vs = [0,-2];
     c.pi = 0;
     c.split = c.vs[0] >= 0 ? true : false;
     console.log(c.size_Of_Block);
+    var end_Of_Interval = false;
     interval = setInterval(function() {
-        if (c.vs[0] > 0 && c.vs[1] > 0 && c.vs[0] < c.vs[1]){
+        if (c.vs[0] >= 0 && c.vs[1] >= 0 && c.vs[0] < c.vs[1]){
+            window.started = false;
+            end_Of_Interval = true;
             clearInterval(interval);
         }
         for (let i = 0; i < c.positions.length; i++){
+            if (!end_Of_Interval){
+            window.started = true;
+            }
             c.positions[i] += c.vs[i];
-            if (i == 1 && c.positions[1]-c.position_Of_Box[0] > c.size_Of_Block[0][0]){
+            if (i == 1 && c.positions[1]-c.vs[i] > c.size_Of_Block[0][0]+c.position_Of_Box[0]){
                 c.add_Position(`${c.name}${i}`, c.positions[i], c.y);
             }
             else if(i == 0){
@@ -97,12 +104,14 @@ function main(digit){
             document.getElementById("pi").innerHTML = `${c.pi}<br /> velocities: ${c.vs[0]}; ${c.vs[1]} <br /> &pi;: ${c.pi/(10**(String(c.pi).length-1))}`;
         }
     },1);
-    //clearInterval(interval);
 }
+    //clearInterval(interval);
 
 function start(){
+    if (!window.started){
     digit = document.getElementById("digit").value;
     digit = digit ? digit : 2;
     document.getElementById("body").innerHTML = "";
     main(digit)
+    }
 }
